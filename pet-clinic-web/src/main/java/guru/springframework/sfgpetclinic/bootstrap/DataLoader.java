@@ -20,29 +20,27 @@ public class DataLoader implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    createOwner(1L, "Michael", "Weston");
-    createOwner(2L, "Fiona", "Glenanne");
+    createOwner("Michael", "Weston");
+    createOwner("Fiona", "Glenanne");
 
     System.out.println("loaded owners....");
 
-    createVet(1L, "Sam", "Axe");
-    createVet(2L, "John", "Smith");
+    createVet("Sam", "Axe");
+    createVet("John", "Smith");
 
     System.out.println("loaded vets....");
   }
 
-  private void createOwner(Long id, String firstName, String lastName) {
+  private void createOwner(String firstName, String lastName) {
     final Owner owner1 = new Owner();
-    owner1.setId(id);
     owner1.setFirstName(firstName);
     owner1.setLastName(lastName);
 
     ownerService.save(owner1);
   }
 
-  private void createVet(Long id, String firstName, String lastName) {
+  private void createVet(String firstName, String lastName) {
     final Vet vet = new Vet();
-    vet.setId(id);
     vet.setFirstName(firstName);
     vet.setLastName(lastName);
 
