@@ -1,6 +1,7 @@
 package guru.springframework.sfgpetclinic.bootstrap;
 
 import guru.springframework.sfgpetclinic.model.Owner;
+import guru.springframework.sfgpetclinic.model.Pet;
 import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.model.Vet;
 import guru.springframework.sfgpetclinic.services.OwnerService;
@@ -8,6 +9,10 @@ import guru.springframework.sfgpetclinic.services.PetTypeService;
 import guru.springframework.sfgpetclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -24,11 +29,14 @@ public class DataLoader implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    final PetType dog = createPetType("Dog");
-    final PetType cat = createPetType("Cat");
+    final PetType savedDogType = createPetType("Dog");
+    final PetType savedCatType = createPetType("Cat");
 
-    createOwner("Michael", "Weston");
-    createOwner("Fiona", "Glenanne");
+    final Pet mikesPet = createPet(savedDogType, "Rosco", "2017-01-01");
+    createOwner("Michael", "Weston", "123 Brickerel", "Miami", "1234567890", Arrays.asList(mikesPet));
+
+    final Pet fionaPet = createPet(savedCatType, "Just a cat", "2017-01-01");
+    createOwner("Fiona", "Glenanne", "123 Brickerel","Miami","1234567890", Arrays.asList(fionaPet));
 
     System.out.println("loaded owners....");
 
@@ -38,18 +46,34 @@ public class DataLoader implements CommandLineRunner {
     System.out.println("loaded vets....");
   }
 
+  private Pet createPet(PetType type, String name, String birthDate) {
+    final Pet pet = new Pet();
+    pet.setPetType(type);
+    pet.setName(name);
+    pet.setBirthDate(LocalDate.parse(birthDate));
+    return pet;
+  }
+
   private PetType createPetType(String dog) {
     final PetType petType = new PetType();
     petType.setName(dog);
     return petTypeService.save(petType);
   }
 
-  private void createOwner(String firstName, String lastName) {
-    final Owner owner1 = new Owner();
-    owner1.setFirstName(firstName);
-    owner1.setLastName(lastName);
+  private Owner createOwner(String firstName, String lastName, String address, String city, String telephone, List<Pet> pets) {
+    final Owner owner = new Owner();
+    owner.setFirstName(firstName);
+    owner.setLastName(lastName);
+    owner.setAddress(address);
+    owner.setCity(city);
+    owner.setTelephone(telephone);
 
-    ownerService.save(owner1);
+    pets.forEach(pet -> {
+      pet.setOwner(owner);
+      owner.getPets().add(pet);
+    });
+
+    return ownerService.save(owner);
   }
 
   private void createVet(String firstName, String lastName) {
