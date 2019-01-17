@@ -7,7 +7,7 @@ import guru.springframework.sfgpetclinic.model.Speciality;
 import guru.springframework.sfgpetclinic.model.Vet;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
-import guru.springframework.sfgpetclinic.services.SpecialtyService;
+import guru.springframework.sfgpetclinic.services.SpecialityService;
 import guru.springframework.sfgpetclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -22,13 +22,13 @@ public class DataLoader implements CommandLineRunner {
   private final OwnerService ownerService;
   private final VetService vetService;
   private final PetTypeService petTypeService;
-  private final SpecialtyService specialtyService;
+  private final SpecialityService specialityService;
 
-  public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService) {
+  public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService) {
     this.ownerService = ownerService;
     this.vetService = vetService;
     this.petTypeService = petTypeService;
-    this.specialtyService = specialtyService;
+    this.specialityService = specialityService;
   }
 
   @Override
@@ -52,9 +52,9 @@ public class DataLoader implements CommandLineRunner {
 
     System.out.println("loaded owners....");
 
-    final Speciality radiology = createSpecialty("radiology");
-    final Speciality surgery = createSpecialty("surgery");
-    final Speciality dentistry = createSpecialty("dentistry");
+    final Speciality radiology = createSpeciality("radiology");
+    final Speciality surgery = createSpeciality("surgery");
+    final Speciality dentistry = createSpeciality("dentistry");
 
     createVet("Sam", "Axe", Arrays.asList(radiology, surgery));
     createVet("John", "Smith", Arrays.asList(dentistry));
@@ -62,10 +62,10 @@ public class DataLoader implements CommandLineRunner {
     System.out.println("loaded vets....");
   }
 
-  private Speciality createSpecialty(String description) {
+  private Speciality createSpeciality(String description) {
     final Speciality speciality = new Speciality();
     speciality.setDescription(description);
-    return specialtyService.save(speciality);
+    return specialityService.save(speciality);
   }
 
   private Pet createPet(PetType type, String name, String birthDate) {
