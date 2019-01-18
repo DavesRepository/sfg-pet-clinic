@@ -5,10 +5,12 @@ import guru.springframework.sfgpetclinic.model.Pet;
 import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.model.Speciality;
 import guru.springframework.sfgpetclinic.model.Vet;
+import guru.springframework.sfgpetclinic.model.Visit;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
 import guru.springframework.sfgpetclinic.services.SpecialityService;
 import guru.springframework.sfgpetclinic.services.VetService;
+import guru.springframework.sfgpetclinic.services.VisitService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +25,14 @@ public class DataLoader implements CommandLineRunner {
   private final VetService vetService;
   private final PetTypeService petTypeService;
   private final SpecialityService specialityService;
+  private final VisitService visitService;
 
-  public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService) {
+  public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService, VisitService visitService) {
     this.ownerService = ownerService;
     this.vetService = vetService;
     this.petTypeService = petTypeService;
     this.specialityService = specialityService;
+    this.visitService = visitService;
   }
 
   @Override
@@ -50,6 +54,8 @@ public class DataLoader implements CommandLineRunner {
     final Pet fionaPet = createPet(savedCatType, "Just a cat", "2017-01-01");
     createOwner("Fiona", "Glenanne", "123 Brickerel","Miami","1234567890", Arrays.asList(fionaPet));
 
+    createVisit(fionaPet, "dental work", "2019-01-04");
+
     System.out.println("loaded owners....");
 
     final Speciality radiology = createSpeciality("radiology");
@@ -60,6 +66,14 @@ public class DataLoader implements CommandLineRunner {
     createVet("John", "Smith", Arrays.asList(dentistry));
 
     System.out.println("loaded vets....");
+  }
+
+  private void createVisit(final Pet fionaPet, String description, String visitDate) {
+    final Visit visit = new Visit();
+    visit.setPet(fionaPet);
+    visit.setDescription(description);
+    visit.setDate(LocalDate.parse(visitDate));
+    visitService.save(visit);
   }
 
   private Speciality createSpeciality(String description) {
