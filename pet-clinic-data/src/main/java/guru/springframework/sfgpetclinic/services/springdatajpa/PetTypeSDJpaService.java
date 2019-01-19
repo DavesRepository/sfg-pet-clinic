@@ -43,7 +43,7 @@ public class PetTypeSDJpaService  implements PetTypeService {
   }
 
   @Override
-  public void DeleteById(Long id) {
+  public void deleteById(Long id) {
     petTypeRepository.deleteById(id);
   }
 }

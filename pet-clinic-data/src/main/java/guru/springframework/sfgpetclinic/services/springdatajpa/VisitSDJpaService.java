@@ -42,7 +42,7 @@ public class VisitSDJpaService implements VisitService {
   }
 
   @Override
-  public void DeleteById(Long id) {
+  public void deleteById(Long id) {
     visitRepository.deleteById(id);
   }
 }
